@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>useful.htmltocss.js: HTML to CSS Converter</title>
+		<style>
+			html { font-family:Sans-Serif; font-size:75%; height:100%; }
+			body { _height:100%; line-height:180%; margin:0; min-height:100%; padding:0; }
+			.padded { padding:2em; }
+		</style>
+		<!--[if lte IE 9]>
+			<meta http-equiv="imagetoolbar" content="no"/>
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+			<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<![endif]-->
+	</head>
+	<body>
+		<section class="example rightExample clearfix">
+			<article class="example">
+				<h2>HTML to CSS Converter</h2>
+				<p>This converter parses the structure of any given piece of HTML and generates a rough empty stylesheet from it.</p>
+				<p><a class="button downloadButton" href="http://www.woollymittens.nl/downloads/htmltocss.zip" target="_blank">Download</a></p>
+			</article>
+			<aside class="example">
+
+				<!-- Cut below this -->
+				<style>@import url("./css/htmltocss.css")</style>
+				<form class="htmltocss">
+					<fieldset>
+						<label>
+							Insert HTML in here:
+							<textarea name="htmlin">
+&lt;section id="example"&gt;
+	&lt;header&gt;
+		&lt;h1&gt;Lorem Ipsum&lt;/h1&gt;
+	&lt;/header&gt;
+	&lt;article&gt;
+		&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+	&lt;/article&gt;
+	&lt;footer&gt;
+		&lt;menu id="sitemap"&gt;
+			&lt;li&gt;&lt;a href="./"&gt;Lorem&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a class="active" href="./"&gt;Ipsum&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="./"&gt;Dolor&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="./"&gt;Sit&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a href="./"&gt;Amet&lt;/a&gt;&lt;/li&gt;
+		&lt;/menu&gt;
+	&lt;/footer&gt;
+&lt;/section&gt;
+							</textarea>
+						</label>
+						<fieldset>
+							<legend>Set your preferences here:</legend>
+							<label><input name="compass" type="checkbox"/> SCSS</label>
+							<label><input name="indented" type="checkbox"/> Indented</label>
+							<label><input name="fromid" type="checkbox" checked/> Minimise rules</label>
+						</fieldset>
+						<label>
+							Copy CSS from here:
+							<textarea name="cssout"></textarea>
+						</label>
+						<footer>
+							<button class="button" type="submit">Convert</button>
+						</footer>
+					</fieldset>
+				</form>
+				<script src="./js/useful.htmltocss.js"></script>
+				<script>
+				//<!--
+					useful.css.select({
+						rule : 'form.htmltocss',
+						handler : useful.htmltocss.setup,
+						data : {}
+					});
+				//-->
+				</script>
+				<!-- Cut above this -->
+
+			</aside>
+		</section>
+	</body>
+</html>
