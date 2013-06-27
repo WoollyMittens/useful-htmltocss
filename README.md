@@ -2,6 +2,8 @@
 
 This converter parses the structure of any given piece of HTML and generates a rough empty stylesheet from it.
 
+Try the <a href="http://www.woollymittens.nl/useful/default.php?url=htmltocss">htmltocss demo</a>.
+
 ## How to use the script
 
 The stylesheet is best included in the header of the document.
