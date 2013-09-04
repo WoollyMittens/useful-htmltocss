@@ -29,7 +29,7 @@
 
 				<!-- Cut below this -->
 				<style>@import url("./css/htmltocss.css")</style>
-				<form class="htmltocss">
+				<form class="htmltocss" id="htmltocss">
 					<fieldset>
 						<label>
 							Insert HTML in here:
@@ -68,14 +68,11 @@
 						</footer>
 					</fieldset>
 				</form>
-				<script src="./js/useful.htmltocss.js"></script>
+				<script src="./js/htmltocss.min.js"></script>
 				<script>
 				//<!--
-					useful.css.select({
-						rule : 'form.htmltocss',
-						handler : useful.htmltocss.setup,
-						data : {}
-					});
+					var htmltocss = new useful.Htmltocss( document.getElementById('htmltocss'), {});
+					htmltocss.start();
 				//-->
 				</script>
 				<!-- Cut above this -->
