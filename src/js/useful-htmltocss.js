@@ -43,6 +43,8 @@
 			}
 			// initial state
 			context.update(context);
+			// disable the start function so it can't be started twice
+			this.start = function () {};
 		};
 		this.events = {};
 		this.events.inputChange = function (element, context) {
@@ -175,6 +177,8 @@
 			// return the  result
 			return css;
 		};
+		// go
+		this.start();
 	};
 
 }(window.useful = window.useful || {}));
