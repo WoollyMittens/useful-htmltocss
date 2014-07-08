@@ -1,39 +1,31 @@
+@import "compass/css3";
+@import "compass/utilities";
 /*
 	Reference Styling for the HTML to CSS Converter
 */
-@media all {
-	@import "compass/css3";
-	@import "compass/utilities";
-	form.htmltocss {
+form.htmltocss {
+	fieldset {
+		margin : 0;
+		padding : 0;
+		label {
+			textarea {
+				display : block;
+				height : 15em;
+				margin : 5px 0 5px 0;
+				width : 100%;
+			}
+		}
 		fieldset {
-			margin : 0;
-			padding : 0;
+			margin-bottom : 5px;
 			label {
-				textarea {
-					display : block;
-					height : 15em;
-					margin : 5px 0 5px 0;
-					width : 100%;
-				}
+				display : block;
 			}
-			fieldset {
-				margin-bottom : 5px;
-				label {
-					display : block;
-				}
-			}
-			footer {
-				text-align : right;
-				button {
-					margin : 5px 0 5px 0;
-				}
+		}
+		footer {
+			text-align : right;
+			button {
+				margin : 5px 0 5px 0;
 			}
 		}
 	}
 }
-@media (min-width: 1200px) {}
-@media (min-width: 980px) and (max-width: 1199px) {}
-@media (min-width: 768px) and (max-width: 979px) {}
-@media (max-width: 767px) {}
-@media (max-width: 480px) {}
-@media print {}
