@@ -29,7 +29,9 @@ To enable the use of HTML5 tags in Internet Explorer 8 and lower, include *html5
 ## How to run the script
 
 ```javascript
-var htmltocss = new useful.Htmltocss( document.getElementById('id'), {});
+var htmltocss = new useful.Htmltocss().init({
+	'element' : document.getElementById('htmltocss')
+});
 ```
 
 **id : {string}** - The ID attribute of an element somewhere in the document.

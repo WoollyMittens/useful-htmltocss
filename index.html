@@ -71,7 +71,9 @@
 				<script src="./inc/js/useful-htmltocss.js"></script>
 				<script>
 				//<!--
-					var htmltocss = new useful.Htmltocss( document.getElementById('htmltocss'), {});
+					var htmltocss = new useful.Htmltocss().init({
+						'element' : document.getElementById('htmltocss')
+					});
 				//-->
 				</script>
 				<!-- Cut above this -->
