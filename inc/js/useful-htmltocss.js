@@ -286,62 +286,66 @@ var useful = useful || {};
 	This work is licensed under a Creative Commons Attribution 3.0 Unported License.
 */
 
-// create the constructor if needed
+// create the global object if needed
 var useful = useful || {};
-useful.Htmltocss = useful.Htmltocss || function () {};
 
-// extend the constructor
-useful.Htmltocss.prototype.init = function (cfg) {
-	// properties
+// extend the global object
+useful.Htmltocss = function () {
+
+	// PROPERTIES
+
 	"use strict";
-	this.cfg = cfg;
-	this.obj = cfg.element;
-	// methods
-	this.start = function () {
-		var _this = this;
+
+	// METHODS
+
+	this.init = function (config) {
+		// store the configuration
+		this.config = config;
+		this.element = config.element;
 		// set the form submit handler
-		_this.onFormSubmit(_this.obj);
+		this.onFormSubmit(this.element);
 		// gather the text areas
-		var textareas = _this.obj.getElementsByTagName('textarea');
-		_this.cfg.input = textareas[0];
-		_this.cfg.output = textareas[1];
-		_this.onInputChange(_this.cfg.input);
+		var textareas = this.element.getElementsByTagName('textarea');
+		this.config.input = textareas[0];
+		this.config.output = textareas[1];
+		this.onInputChange(this.config.input);
 		// gather the options
-		var options = _this.obj.getElementsByTagName('input');
-		_this.cfg.options = {};
+		var options = this.element.getElementsByTagName('input');
+		this.config.options = {};
 		for (var a = 0, b = options.length; a < b; a += 1) {
 			// if this is an actual option
 			if (options[a].type === 'checkbox') {
 				// note its state
-				_this.cfg.options[options[a].name] = options[a].checked;
+				this.config.options[options[a].name] = options[a].checked;
 				// add an event handler
-				_this.onOptionChange(options[a]);
+				this.onOptionChange(options[a]);
 			}
 		}
 		// initial state
-		_this.update();
-		// disable the start function so it can't be started twice
-		this.init = function () {};
+		this.update();
+		// return the object
+		return this;
 	};
+
 	this.update = function () {
-		var _this = this;
 		// variables
 		var dummy, output;
 		// create a new dummy container
 		dummy = document.createElement('div');
 		// put the html from the input in the dummy container
-		dummy.innerHTML = _this.cfg.input.value;
+		dummy.innerHTML = this.config.input.value;
 		// pass the dummy through the redraw function
-		output = _this.parse(dummy, -1, '', '');
+		output = this.parse(dummy, -1, '', '');
 		// add the scss conversion step is needed
-		if (_this.cfg.options.compass) {
-			output = _this.convert(output);
+		if (this.config.options.compass) {
+			output = this.convert(output);
 		}
 		//publish the result in the output
-		_this.cfg.output.value = output;
+		this.config.output.value = output;
 		// clear the  dummy container
 		dummy = null;
 	};
+
 	this.childnodes = function (parent) {
 		// variables
 		var children, a, b, nodes = parent.childNodes;
@@ -356,6 +360,7 @@ useful.Htmltocss.prototype.init = function (cfg) {
 		}
 		return children;
 	};
+
 	this.convert = function (output) {
 		// split the output into lines
 		var a, b, c, d, elements, tabs, next, lines = output.split('}');
@@ -392,6 +397,7 @@ useful.Htmltocss.prototype.init = function (cfg) {
 		// return the result
 		return lines.join('');
 	};
+
 	this.parse = function (element, recursion, prefix, css) {
 		var _this = this;
 		// variables
@@ -400,7 +406,7 @@ useful.Htmltocss.prototype.init = function (cfg) {
 		if (recursion >= 0) {
 			// add indentations based on the recursion
 			indentation = '';
-			if (_this.cfg.options.indented || _this.cfg.options.compass) {
+			if (_this.config.options.indented || _this.config.options.compass) {
 				for (a = 0; a < recursion; a += 1) {
 					indentation += '\t';
 				}
@@ -417,7 +423,7 @@ useful.Htmltocss.prototype.init = function (cfg) {
 			entry += ' ';
 			suffix = '{}\n';
 			// reset the chain after an id
-			if (_this.cfg.options.fromid && entry.match(/#/gi)) {
+			if (_this.config.options.fromid && entry.match(/#/gi)) {
 				prefix = '';
 			}
 			// if the line doesn't exist yet
@@ -434,7 +440,9 @@ useful.Htmltocss.prototype.init = function (cfg) {
 		// return the  result
 		return css;
 	};
-	// events
+
+	// EVENTS
+
 	this.onInputChange = function (element) {
 		var _this = this;
 		// set an event handler
@@ -442,14 +450,16 @@ useful.Htmltocss.prototype.init = function (cfg) {
 			_this.update();
 		};
 	};
+
 	this.onOptionChange = function (element) {
 		var _this = this;
 		// set an event handler
 		element.onchange = function () {
-			_this.cfg.options[element.name] = element.checked;
+			_this.config.options[element.name] = element.checked;
 			_this.update(_this);
 		};
 	};
+
 	this.onFormSubmit = function (element) {
 		var _this = this;
 		// set an event handler
@@ -459,9 +469,7 @@ useful.Htmltocss.prototype.init = function (cfg) {
 			return false;
 		};
 	};
-	// go
-	this.start();
-	return this;
+
 };
 
 // return as a require.js module
