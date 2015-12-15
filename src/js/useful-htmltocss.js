@@ -34,7 +34,7 @@ useful.Htmltocss = function () {
 		this.config.options = {};
 		for (var a = 0, b = options.length; a < b; a += 1) {
 			// if this is an actual option
-			if (options[a].type === 'checkbox') {
+			if (/checkbox/.test(options[a].type)) {
 				// note its state
 				this.config.options[options[a].name] = options[a].checked;
 				// add an event handler
@@ -121,7 +121,8 @@ useful.Htmltocss = function () {
 	this.parse = function (element, recursion, prefix, css) {
 		var _this = this;
 		// variables
-		var a, b, indentation = '', entry = '', suffix = '', children = _this.childnodes(element);
+		var a, b, indentation = '', entry = '', suffix = '', classNames = [], children = _this.childnodes(element);
+		var hasId = (element.id), hasClass = (element.className), isAbridged = _this.config.options.abridged, noIds = _this.config.options.noids, isForm = /input/i.test(element.nodeName), isReversed = _this.config.options.reverse;
 		// if the recursion is high enough
 		if (recursion >= 0) {
 			// add indentations based on the recursion
@@ -131,21 +132,24 @@ useful.Htmltocss = function () {
 					indentation += '\t';
 				}
 			}
-			// identify the element
-			entry = element.nodeName.toLowerCase();
-			if (element.id) {
+			// add the nodename
+			entry = (isAbridged && ((hasId && !noIds) || hasClass)) ? '' : element.nodeName.toLowerCase();
+			// add the form element type
+			if (isForm && entry !== '') {
+				entry += '[type=' + element.type + ']';
+			}
+			// add the id
+			if (hasId && !noIds) {
 				entry += '#' + element.id;
 			}
-			if (element.className) {
-				entry += '.' + element.className.replace(/ /gi, '.');
+			// add the class names
+			if (hasClass) {
+				classNames = (isReversed) ? element.className.split(' ').reverse() : element.className.split(' ');
+				entry += (_this.config.options.abridged) ? '.' + classNames[0] : '.' + classNames.join('.');
 			}
 			// add the suffix
 			entry += ' ';
 			suffix = '{}\n';
-			// reset the chain after an id
-			if (_this.config.options.fromid && entry.match(/#/gi)) {
-				prefix = '';
-			}
 			// if the line doesn't exist yet
 			if (css.indexOf(indentation + prefix + entry + suffix) < 0) {
 				// add the entry to the stylesheet
