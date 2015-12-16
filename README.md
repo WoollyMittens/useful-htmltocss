@@ -2,7 +2,7 @@
 
 This converter parses the structure of any given piece of HTML and generates a rough empty stylesheet from it.
 
-Try the <a href="http://www.woollymittens.nl/useful/default.php?url=useful-htmltocss">demo</a>.
+Try the <a href="http://www.woollymittens.nl/default.php?url=useful-htmltocss">demo</a>.
 
 ## How to include the script
 
