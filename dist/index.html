@@ -42,6 +42,10 @@
 	&lt;article&gt;
 		&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
 	&lt;/article&gt;
+	&lt;div class="row"&gt;
+		&lt;div class="col-sm-5 col-sm-offset-1 left">left&lt;/div&gt;
+		&lt;div class="col-sm-5 right">right&lt;/div&gt;
+	&lt;/div&gt;
 	&lt;footer&gt;
 		&lt;menu id="sitemap" class="map map-open"&gt;
 			&lt;li&gt;&lt;a href="./"&gt;Lorem&lt;/a&gt;&lt;/li&gt;
@@ -60,7 +64,9 @@
 							<label><input name="indented" type="checkbox"/> Indented</label>
 							<label><input name="noids" type="checkbox"/> Ignore id's</label>
 							<label><input name="abridged" type="checkbox" checked/> Abridged rules</label>
-							<label><input name="reverse" type="checkbox" checked/>Reverse classname order</label>
+							<label><input name="complex" type="checkbox" checked/> Prefer most complex classname</label>
+							<label><input name="reverse" type="checkbox"/> Reverse classname order</label>
+							<label><input name="applyfilter" type="checkbox" checked/> Ignore these <input name="filterreg" type="text" value="span|col|row|container|pull|first|last"/></label>
 						</fieldset>
 						<label>
 							Copy CSS from here:

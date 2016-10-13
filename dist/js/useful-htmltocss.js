@@ -441,6 +441,8 @@ useful.Htmltocss = function () {
 
 	"use strict";
 
+	this.isBootstrap = /span|col|row|container/;
+
 	// METHODS
 
 	this.init = function (config) {
@@ -457,11 +459,13 @@ useful.Htmltocss = function () {
 		// gather the options
 		var options = this.element.getElementsByTagName('input');
 		this.config.options = {};
+		this.config.values = {};
 		for (var a = 0, b = options.length; a < b; a += 1) {
 			// if this is an actual option
-			if (/checkbox/.test(options[a].type)) {
+			if (/checkbox|text/.test(options[a].type)) {
 				// note its state
 				this.config.options[options[a].name] = options[a].checked;
+				this.config.values[options[a].name] = options[a].value;
 				// add an event handler
 				this.onOptionChange(options[a]);
 			}
@@ -547,38 +551,67 @@ useful.Htmltocss = function () {
 		var _this = this;
 		// variables
 		var a, b, indentation = '', entry = '', suffix = '', classNames = [], children = _this.childnodes(element);
-		var hasId = (element.id), hasClass = (element.className), isAbridged = _this.config.options.abridged, noIds = _this.config.options.noids, isForm = /input/i.test(element.nodeName), isReversed = _this.config.options.reverse;
+		var hasId = (element.id),
+			hasClass = (element.className),
+			isAbridged = _this.config.options.abridged,
+			noIds = _this.config.options.noids,
+			isForm = /input/i.test(element.nodeName),
+			isComplex = _this.config.options.complex,
+			isReversed = _this.config.options.reverse,
+			applyFilter = _this.config.options.applyfilter,
+			filterReg = new RegExp(_this.config.values.filterreg, 'gi'),
+			classSegments = element.className.trim().split(' ');
 		// if the recursion is high enough
 		if (recursion >= 0) {
-			// add indentations based on the recursion
-			indentation = '';
-			if (_this.config.options.indented || _this.config.options.compass) {
-				for (a = 0; a < recursion; a += 1) {
-					indentation += '\t';
+			// if this recursion is only bootstrap markup
+			if (applyFilter && !hasId && filterReg.test(element.className) && element.className.match(filterReg).length === classSegments.length) {
+				// ignore this entire recursion
+				recursion -= 1;
+			} else {
+				// add indentations based on the recursion
+				indentation = '';
+				if (_this.config.options.indented || _this.config.options.compass) {
+					for (a = 0; a < recursion; a += 1) {
+						indentation += '\t';
+					}
 				}
-			}
-			// add the nodename
-			entry = (isAbridged && ((hasId && !noIds) || hasClass)) ? '' : element.nodeName.toLowerCase();
-			// add the form element type
-			if (isForm && entry !== '') {
-				entry += '[type=' + element.type + ']';
-			}
-			// add the id
-			if (hasId && !noIds) {
-				entry += '#' + element.id;
-			}
-			// add the class names
-			if (hasClass) {
-				classNames = (isReversed) ? element.className.split(' ').reverse() : element.className.split(' ');
-				entry += (_this.config.options.abridged) ? '.' + classNames[0] : '.' + classNames.join('.');
-			}
-			// add the suffix
-			entry += ' ';
-			suffix = '{}\n';
-			// if the line doesn't exist yet
-			if (css.indexOf(indentation + prefix + entry + suffix) < 0) {
-				// add the entry to the stylesheet
-				css += indentation + prefix + entry + suffix;
+				// add the nodename
+				entry = (isAbridged && ((hasId && !noIds) || hasClass)) ? '' : element.nodeName.toLowerCase();
+				// add the form element type
+				if (isForm && entry !== '') {
+					entry += '[type=' + element.type + ']';
+				}
+				// add the id
+				if (hasId && !noIds) {
+					entry += '#' + element.id;
+				}
+				// filter out unwanted classes
+				if (hasClass && applyFilter) {
+					for (a = classSegments.length, b = 0; a > b; a -= 1) {
+						if (classSegments[a - 1].match(filterReg)) {
+							classSegments.splice(a - 1, 1);
+						}
+					}
+					hasClass = (classSegments.length > 0);
+				}
+				// add the class names
+				if (hasClass) {
+					classNames = (isComplex) ? classSegments.sort(function (a, b) {var a = (a.match(/-/g) || []).length, b = (b.match(/-/g) || []).length; return b - a }) : classSegments;
+					classNames = (isReversed) ? classSegments.reverse() : classSegments;
+					entry += (_this.config.options.abridged) ? '.' + classNames[0] : '.' + classNames.join('.');
+				}
+				// if the line is still empty use the element type instead
+				if (entry === '') {
+					entry = element.nodeName.toLowerCase();
+				}
+				// add the suffix
+				entry += ' ';
+				suffix = '{}\n';
+				// if the line doesn't exist yet
+				if (css.indexOf(indentation + prefix + entry + suffix) < 0) {
+					// add the entry to the stylesheet
+					css += indentation + prefix + entry + suffix;
+				}
 			}
 		}
 		// for all of its child nodes
@@ -588,6 +621,10 @@ useful.Htmltocss = function () {
 		}
 		// return the  result
 		return css;
+	};
+
+	this.byDashes = function () {
+
 	};
 
 	// EVENTS
@@ -605,6 +642,7 @@ useful.Htmltocss = function () {
 		// set an event handler
 		element.onchange = function () {
 			_this.config.options[element.name] = element.checked;
+			_this.config.values[element.name] = element.value;
 			_this.update(_this);
 		};
 	};
