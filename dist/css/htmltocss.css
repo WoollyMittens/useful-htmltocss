@@ -1,0 +1,19 @@
+form.htmltocss fieldset {
+  border: none;
+  margin: 0;
+  padding: 0; }
+  form.htmltocss fieldset label textarea {
+    display: block;
+    height: 15em;
+    margin: 5px 0 5px 0;
+    width: 100%; }
+  form.htmltocss fieldset fieldset {
+    margin-bottom: 5px; }
+    form.htmltocss fieldset fieldset label {
+      display: block; }
+  form.htmltocss fieldset footer {
+    text-align: right; }
+    form.htmltocss fieldset footer button {
+      margin: 5px 0 5px 0; }
+
+/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIl9tYWluLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFFRSxhQUFZO0VBQ1osVUFBVTtFQUNWLFdBQVcsRUFxQlg7RUF6QkY7SUFPSSxlQUFlO0lBQ2YsYUFBYTtJQUNiLG9CQUFvQjtJQUNwQixZQUFZLEVBQ1o7RUFYSjtJQWNHLG1CQUFtQixFQUluQjtJQWxCSDtNQWdCSSxlQUFlLEVBQ2Y7RUFqQko7SUFvQkcsa0JBQWtCLEVBSWxCO0lBeEJIO01Bc0JJLG9CQUFvQixFQUNwQiIsImZpbGUiOiJodG1sdG9jc3MuY3NzIiwic291cmNlc0NvbnRlbnQiOlsiZm9ybS5odG1sdG9jc3Mge1xyXG5cdGZpZWxkc2V0IHtcclxuXHRcdGJvcmRlcjogbm9uZTtcclxuXHRcdG1hcmdpbiA6IDA7XHJcblx0XHRwYWRkaW5nIDogMDtcclxuXHRcdGxhYmVsIHtcclxuXHRcdFx0dGV4dGFyZWEge1xyXG5cdFx0XHRcdGRpc3BsYXkgOiBibG9jaztcclxuXHRcdFx0XHRoZWlnaHQgOiAxNWVtO1xyXG5cdFx0XHRcdG1hcmdpbiA6IDVweCAwIDVweCAwO1xyXG5cdFx0XHRcdHdpZHRoIDogMTAwJTtcclxuXHRcdFx0fVxyXG5cdFx0fVxyXG5cdFx0ZmllbGRzZXQge1xyXG5cdFx0XHRtYXJnaW4tYm90dG9tIDogNXB4O1xyXG5cdFx0XHRsYWJlbCB7XHJcblx0XHRcdFx0ZGlzcGxheSA6IGJsb2NrO1xyXG5cdFx0XHR9XHJcblx0XHR9XHJcblx0XHRmb290ZXIge1xyXG5cdFx0XHR0ZXh0LWFsaWduIDogcmlnaHQ7XHJcblx0XHRcdGJ1dHRvbiB7XHJcblx0XHRcdFx0bWFyZ2luIDogNXB4IDAgNXB4IDA7XHJcblx0XHRcdH1cclxuXHRcdH1cclxuXHR9XHJcbn1cclxuIl19 */

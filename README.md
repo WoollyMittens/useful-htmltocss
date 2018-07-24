@@ -1,4 +1,4 @@
-# useful.htmltocss.js: HTML to CSS Converter
+# htmltocss.js: HTML to CSS Converter
 
 This converter parses the structure of any given piece of HTML and generates a rough empty stylesheet from it.
 
@@ -9,27 +9,19 @@ Try the <a href="http://www.woollymittens.nl/default.php?url=useful-htmltocss">d
 The stylesheet is best included in the header of the document.
 
 ```html
-<link rel="stylesheet" href="./css/useful-htmltocss.css"/>
+<link rel="stylesheet" href="./css/htmltocss.css"/>
 ```
 
 This include can be added to the header or placed inline before the script is invoked.
 
 ```html
-<script src="./js/useful-htmltocss.js"></script>
-```
-
-To enable the use of HTML5 tags in Internet Explorer 8 and lower, include *html5.js*.
-
-```html
-<!--[if lte IE 9]>
-	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+<script src="./js/htmltocss.js"></script>
 ```
 
 ## How to run the script
 
 ```javascript
-var htmltocss = new useful.Htmltocss().init({
+var htmltocss = new Htmltocss({
 	'element' : document.getElementById('htmltocss')
 });
 ```

@@ -1,22 +1,17 @@
 /*
 	Source:
-	van Creij, Maurice (2014). "useful._this.js: Generates an empty stylesheet from HTML.", version 20141127, http://www.woollymittens.nl/.
+	van Creij, Maurice (2018). ".htmltocss.js: Generates an empty stylesheet from HTML.", http://www.woollymittens.nl/.
 
 	License:
 	This work is licensed under a Creative Commons Attribution 3.0 Unported License.
 */
 
-// create the global object if needed
-var useful = useful || {};
-
-// extend the global object
-useful.Htmltocss = function () {
+// establish the class
+var Htmltocss = function (config) {
 
 	// PROPERTIES
 
-	"use strict";
-
-	this.isBootstrap = /span|col|row|container/;
+	this.isBootstrap = /span-\d|col-offset-..-\d|col-..-\d|mt-\d|mr-\d|mb-\d|ml-\d|pt-\d|pr-\d|pb-\d|pl-\d|row|container|pull-|first|last/;
 
 	// METHODS
 
@@ -232,9 +227,11 @@ useful.Htmltocss = function () {
 		};
 	};
 
+	this.init(config);
+
 };
 
 // return as a require.js module
 if (typeof module !== 'undefined') {
-	exports = module.exports = useful.Htmltocss;
+	exports = module.exports = Htmltocss;
 }
