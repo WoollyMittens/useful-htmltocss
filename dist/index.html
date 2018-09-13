@@ -23,30 +23,30 @@
 
 				<!-- Cut below this -->
 				<style>@import url("./css/htmltocss.css");</style>
-				<form class="htmltocss" id="htmltocss">
+				<form class="html2scss" id="html2scss_form">
 					<fieldset>
 						<label>
 							Insert HTML in here:
-							<textarea name="htmlin">
+							<textarea name="html_input">
 &lt;section id="example"&gt;
 	&lt;header&gt;
 		&lt;h1&gt;Lorem Ipsum&lt;/h1&gt;
-		&lt;input type="text" id="keyword"/&gt;
+		&lt;input type="text" name="keyword"/&gt;
 	&lt;/header&gt;
 	&lt;article&gt;
 		&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
 	&lt;/article&gt;
 	&lt;div class="row"&gt;
-		&lt;div class="col-sm-5 col-sm-offset-1 left">left&lt;/div&gt;
-		&lt;div class="col-sm-5 right">right&lt;/div&gt;
+		&lt;div class="col-sm-4 col-md-3 col-offset-sm-1 left">left&lt;/div&gt;
+		&lt;div class="col-sm-8 col-md-9 right">right&lt;/div&gt;
 	&lt;/div&gt;
 	&lt;footer&gt;
 		&lt;menu id="sitemap" class="map map-open"&gt;
-			&lt;li&gt;&lt;a href="./"&gt;Lorem&lt;/a&gt;&lt;/li&gt;
-			&lt;li&gt;&lt;a class="active" href="./"&gt;Ipsum&lt;/a&gt;&lt;/li&gt;
-			&lt;li&gt;&lt;a href="./"&gt;Dolor&lt;/a&gt;&lt;/li&gt;
-			&lt;li&gt;&lt;a href="./"&gt;Sit&lt;/a&gt;&lt;/li&gt;
-			&lt;li&gt;&lt;a href="./"&gt;Amet&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a class="map-link" href="./useful-htmltocss/dist/"&gt;Lorem&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a class="map-link active" href="./useful-htmltocss/dist/"&gt;Ipsum&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a class="map-link" href="./useful-htmltocss/dist/"&gt;Dolor&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a class="map-link" href="./useful-htmltocss/dist/"&gt;Sit&lt;/a&gt;&lt;/li&gt;
+			&lt;li&gt;&lt;a class="map-link" href="./useful-htmltocss/dist/"&gt;Amet&lt;/a&gt;&lt;/li&gt;
 		&lt;/menu&gt;
 	&lt;/footer&gt;
 &lt;/section&gt;
@@ -54,28 +54,36 @@
 						</label>
 						<fieldset>
 							<legend>Set your preferences here:</legend>
-							<label><input name="compass" type="checkbox" checked/> SCSS</label>
-							<label><input name="indented" type="checkbox"/> Indented</label>
-							<label><input name="noids" type="checkbox"/> Ignore id's</label>
-							<label><input name="abridged" type="checkbox" checked/> Abridged rules</label>
-							<label><input name="complex" type="checkbox" checked/> Prefer most complex classname</label>
-							<label><input name="reverse" type="checkbox"/> Reverse classname order</label>
-							<label><input name="applyfilter" type="checkbox" checked/> Ignore these <input name="filterreg" type="text" value="span-\d|col-offset-..-\d|col-..-\d|mt-\d|mr-\d|mb-\d|ml-\d|pt-\d|pr-\d|pb-\d|pl-\d|row|container|pull-|first|last"/></label>
+							<label><input type="checkbox" name="scss_format" checked/> Format as SASS/LESS</label>
+				      <label><input type="checkbox" name="reverse_class_names"/> Reverse class names</label>
+				      <label><input type="checkbox" name="reset_ids" checked/> Reset at ID's</label>
+				      <label><input type="checkbox" name="ignore_ids"/> Ignore ID's</label>
+				      <label>Indentation <input type="text" name="indentation" value="\t" placeholder="\t for tabs"/></label>
+				      <label>Ignore <input type="text" name="ignore_classes" value="^span-|^col-|^mt-|^mr-|^mb-|^ml-|^pt-|^pr-|^pb-|^pl-|^row$|^container$|^pull-|^first$|^last$" placeholder="regular expression"/></label>
 						</fieldset>
 						<label>
 							Copy CSS from here:
-							<textarea name="cssout"></textarea>
+							<textarea name="scss_output"></textarea>
 						</label>
 						<footer>
-							<button class="button" type="submit">Convert</button>
+							<button class="convert_html" type="submit">Convert</button>
 						</footer>
 					</fieldset>
 				</form>
 				<script src="./js/htmltocss.js"></script>
 				<script>
 				//<!--
-					var htmltocss = new Htmltocss({
-						'element' : document.getElementById('htmltocss')
+					var htmltocss = new HtmltoCss({
+						'element': document.getElementById('html2scss_form'),
+			      'htmlInput': document.querySelector('[name=html_input]'),
+			      'scssOutput': document.querySelector('[name=scss_output]'),
+			      'scssFormat': document.querySelector('[name=scss_format]'),
+			      'reverseClassNames': document.querySelector('[name=reverse_class_names]'),
+			      'resetIds': document.querySelector('[name=reset_ids]'),
+			      'ignoreIds': document.querySelector('[name=ignore_ids]'),
+			      'convertHtml': document.querySelector('[name=convert_html]'),
+			      'indentation': document.querySelector('[name=indentation]'),
+			      'ignoreClasses': document.querySelector('[name=ignore_classes]')
 					});
 				//-->
 				</script>

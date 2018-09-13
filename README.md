@@ -21,14 +21,23 @@ This include can be added to the header or placed inline before the script is in
 ## How to run the script
 
 ```javascript
-var htmltocss = new Htmltocss({
-	'element' : document.getElementById('htmltocss')
+var htmltocss = new HtmltoCss({
+	'element' : document.getElementById('html2scss_form'),
+	'htmlInput': document.querySelector('[name=html_input]'),
+	'scssOutput': document.querySelector('[name=scss_output]'),
+	'scssFormat': document.querySelector('[name=scss_format]'),
+	'reverseClassNames': document.querySelector('[name=reverse_class_names]'),
+	'resetIds': document.querySelector('[name=reset_ids]'),
+	'ignoreIds': document.querySelector('[name=ignore_ids]'),
+	'convertHtml': document.querySelector('[name=convert_html]'),
+	'indentation': document.querySelector('[name=indentation]'),
+	'ignoreClasses': document.querySelector('[name=ignore_classes]')
 });
 ```
 
-**id : {string}** - The ID attribute of an element somewhere in the document.
+**element : {DOM Element}** - The form element of the converter.
 
-**parent : {DOM node}** - The DOM element around which the functionality is centred.
+**... : {DOM Element}** - The individual form fields.
 
 ## How to build the script
 

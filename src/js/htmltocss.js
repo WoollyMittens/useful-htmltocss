@@ -7,231 +7,144 @@
 */
 
 // establish the class
-var Htmltocss = function (config) {
+var HtmltoCss = function (cfg) {
 
 	// PROPERTIES
 
-	this.isBootstrap = /span-\d|col-offset-..-\d|col-..-\d|mt-\d|mr-\d|mb-\d|ml-\d|pt-\d|pr-\d|pb-\d|pl-\d|row|container|pull-|first|last/;
+	this.cfg = cfg;
+	this.container = null;
+	this.map = null;
+	this.scss = null;
+	this.ignore = null;
 
 	// METHODS
 
-	this.init = function (config) {
-		// store the configuration
-		this.config = config;
-		this.element = config.element;
-		// set the form submit handler
-		this.onFormSubmit(this.element);
-		// gather the text areas
-		var textareas = this.element.getElementsByTagName('textarea');
-		this.config.input = textareas[0];
-		this.config.output = textareas[1];
-		this.onInputChange(this.config.input);
-		// gather the options
-		var options = this.element.getElementsByTagName('input');
-		this.config.options = {};
-		this.config.values = {};
-		for (var a = 0, b = options.length; a < b; a += 1) {
-			// if this is an actual option
-			if (/checkbox|text/.test(options[a].type)) {
-				// note its state
-				this.config.options[options[a].name] = options[a].checked;
-				this.config.values[options[a].name] = options[a].value;
-				// add an event handler
-				this.onOptionChange(options[a]);
-			}
-		}
-		// initial state
-		this.update();
-		// return the object
-		return this;
+	this.convert = function(submit, evt) {
+		if (!submit) evt.preventDefault();
+		// reset the state
+		this.reset();
+		// place the HTML in a DOM object
+		this.container.innerHTML = cfg.htmlInput.value;
+		// import the HTML DOM
+		this.import(this.container, this.map);
+		// export the result
+		cfg.scssOutput.value = (cfg.scssFormat.checked) ?
+			this.exportScss(this.scss, this.map.body, 0, ''):
+			this.exportCss(this.scss, this.map.body, 0, '');
 	};
 
-	this.update = function () {
-		// variables
-		var dummy, output;
-		// create a new dummy container
-		dummy = document.createElement('div');
-		// put the html from the input in the dummy container
-		dummy.innerHTML = this.config.input.value;
-		// pass the dummy through the redraw function
-		output = this.parse(dummy, -1, '', '');
-		// add the scss conversion step is needed
-		if (this.config.options.compass) {
-			output = this.convert(output);
-		}
-		//publish the result in the output
-		this.config.output.value = output;
-		// clear the  dummy container
-		dummy = null;
+	this.reset = function() {
+		// set the starting values
+		this.container = document.createElement('body');
+		this.map = {};
+		this.scss = null;
+		this.ignore = new RegExp(cfg.ignoreClasses.value);
 	};
 
-	this.childnodes = function (parent) {
-		// variables
-		var children, a, b, nodes = parent.childNodes;
-		// for all nodes in the parent
-		children = [];
-		for (a = 0 , b = nodes.length; a < b; a += 1) {
-			// if the node is not text
-			if (!nodes[a].nodeName.match('#')) {
-				// include it in the list of children
-				children.push(nodes[a]);
+	this.import = function(element, node) {
+		// give the element a place in the map object
+		if (!/text|script|comment/i.test(element.nodeName)) {
+			var a, b;
+			var key = element.nodeName.toLowerCase();
+			var id = element.getAttribute('id');
+			var classNames = (element.getAttribute('class')) ? element.getAttribute('class').trim().replace(/  /g, ' ').split(' ') : [];
+			var classes = [];
+			var ignore = this.ignore;
+			classNames.map(function(name) {
+				if (!ignore.test(name)) classes.push(name);
+			});
+			// add the input [type] if possible
+			if (element.getAttribute('type')) key += '[type=' + element.getAttribute('type') + ']';
+			// reverse the order of class name keys
+			if (cfg.reverseClassNames.checked) classes = classes.reverse();
+			// if the element has an ID
+			if (id && !cfg.ignoreIds.checked) {
+				// use the ID as a key
+				key = '#' + id;
+				// revert to the root of the map
+				if (cfg.resetIds.checked && !/input|select|textarea/i.test(element.nodeName)) node = this.map.body;
+				// else if the element has a class name
+			} else if (classes.length > 0) {
+				// use the first class as the key
+				key = '.' + classes[0];
+				// remove the first class
+				classes = classes.reverse();
+				classes.length = classes.length - 1;
+				classes = classes.reverse();
+			}
+			// add a new node if needed
+			node[key] = node[key] || {};
+			// for any (remaining) class names
+			classes.map(function(className) {
+				node[key]['&.' + className] = {};
+			});
+			// add a :hover to links
+			if (/^a$/i.test(element.nodeName)) node[key]['&:hover'] = {};
+			// recurse all child nodes
+			for (a = 0, b = element.childNodes.length; a < b; a += 1) {
+				this.import(element.childNodes[a], node[key]);
 			}
 		}
-		return children;
 	};
 
-	this.convert = function (output) {
-		// split the output into lines
-		var a, b, c, d, elements, tabs, next, lines = output.split('}');
-		// for all lines
-		for (a = 0 , b = lines.length - 1; a < b; a += 1) {
-			// split the elements of each line
-			elements = lines[a].split(' ');
-			// restore the tabs
-			tabs = elements[0].match(/\t/gi);
-			tabs = (!tabs) ? [] : tabs;
-			// only keep the last element of each line
-			lines[a] = tabs.join('') + elements[elements.length - 2] + ' {\n';
-			// if the next line exists
-			if (a < lines.length) {
-				// check the tabs on the next line
-				next = lines[a + 1].match(/\t/gi);
-				next = (!next) ? [] : next;
-				// if the next line is shallower
-				if (next.length < tabs.length) {
-					// add the closing bracket at the end of the line
-					lines[a] = lines[a].replace('{', '{}');
-					// add closing bracket at the recursion down to the next indentation
-					for (c = 0 , d = tabs.length - next.length; c < d; c += 1) {
-						lines[a] += tabs.join('').substr(c + 1) + '}\n';
-					}
-				}
-				// if the next line is at the same level
-				if (next.length === tabs.length) {
-					// add the closing bracket at the end of the line
-					lines[a] = lines[a].replace('{', '{}');
-				}
-			}
+	this.exportScss = function(key, node, indent, scss) {
+		// set up the indentation
+		var tabs = '';
+		for (var a = 1, b = indent; a < b; a += 1) {
+			tabs += cfg.indentation.value.replace(/\\t/g, '\t');
+		}
+		// represent this node in the css
+		scss += (key) ? tabs + key + ' {' : '';
+		// only have an open bracket if there are child nodes
+		if (key && Object.keys(node).length > 0) {
+			scss += '\n';
+		} else {
+			tabs = '';
+		}
+		// recurse every key in this node
+		for (var child in node) {
+			scss += this.exportScss(child, node[child], indent + 1, '');
+		}
+		// close the node
+		scss += (key) ? tabs + '}\n' : '';
+		// return the result
+		return scss;
+	};
+
+	this.exportCss = function(key, node, indent, scss) {
+		// represent this node in the css
+		scss += (key) ? key + ' {}\n' : '';
+		// only have an open bracket if there are child nodes
+		if (key && Object.keys(node).length > 0) {
+
+		}
+		// recurse every key in this node
+		var rule = '';
+		for (var child in node) {
+			rule = (key) ? key + ' ' + child : child;
+			rule = rule.replace(/ &/, '');
+			scss += this.exportCss(rule, node[child], indent + 1, '');
 		}
 		// return the result
-		return lines.join('');
-	};
-
-	this.parse = function (element, recursion, prefix, css) {
-		var _this = this;
-		// variables
-		var a, b, indentation = '', entry = '', suffix = '', classNames = [], children = _this.childnodes(element);
-		var hasId = (element.id),
-			hasClass = (element.className),
-			isAbridged = _this.config.options.abridged,
-			noIds = _this.config.options.noids,
-			isForm = /input/i.test(element.nodeName),
-			isComplex = _this.config.options.complex,
-			isReversed = _this.config.options.reverse,
-			applyFilter = _this.config.options.applyfilter,
-			filterReg = new RegExp(_this.config.values.filterreg, 'gi'),
-			classSegments = element.className.trim().split(' ');
-		// if the recursion is high enough
-		if (recursion >= 0) {
-			// if this recursion is only bootstrap markup
-			if (applyFilter && !hasId && filterReg.test(element.className) && element.className.match(filterReg).length === classSegments.length) {
-				// ignore this entire recursion
-				recursion -= 1;
-			} else {
-				// add indentations based on the recursion
-				indentation = '';
-				if (_this.config.options.indented || _this.config.options.compass) {
-					for (a = 0; a < recursion; a += 1) {
-						indentation += '\t';
-					}
-				}
-				// add the nodename
-				entry = (isAbridged && ((hasId && !noIds) || hasClass)) ? '' : element.nodeName.toLowerCase();
-				// add the form element type
-				if (isForm && entry !== '') {
-					entry += '[type=' + element.type + ']';
-				}
-				// add the id
-				if (hasId && !noIds) {
-					entry += '#' + element.id;
-				}
-				// filter out unwanted classes
-				if (hasClass && applyFilter) {
-					for (a = classSegments.length, b = 0; a > b; a -= 1) {
-						if (classSegments[a - 1].match(filterReg)) {
-							classSegments.splice(a - 1, 1);
-						}
-					}
-					hasClass = (classSegments.length > 0);
-				}
-				// add the class names
-				if (hasClass) {
-					classNames = (isComplex) ? classSegments.sort(function (a, b) {var a = (a.match(/-/g) || []).length, b = (b.match(/-/g) || []).length; return b - a }) : classSegments;
-					classNames = (isReversed) ? classSegments.reverse() : classSegments;
-					entry += (_this.config.options.abridged) ? '.' + classNames[0] : '.' + classNames.join('.');
-				}
-				// if the line is still empty use the element type instead
-				if (entry === '') {
-					entry = element.nodeName.toLowerCase();
-				}
-				// add the suffix
-				entry += ' ';
-				suffix = '{}\n';
-				// if the line doesn't exist yet
-				if (css.indexOf(indentation + prefix + entry + suffix) < 0) {
-					// add the entry to the stylesheet
-					css += indentation + prefix + entry + suffix;
-				}
-			}
-		}
-		// for all of its child nodes
-		for (a = 0 , b = children.length; a < b; a += 1) {
-			// recurse
-			css = _this.parse(children[a], recursion + 1, prefix + entry, css);
-		}
-		// return the  result
-		return css;
-	};
-
-	this.byDashes = function () {
-
+		return scss;
 	};
 
 	// EVENTS
 
-	this.onInputChange = function (element) {
-		var _this = this;
-		// set an event handler
-		element.onchange = function () {
-			_this.update();
-		};
-	};
-
-	this.onOptionChange = function (element) {
-		var _this = this;
-		// set an event handler
-		element.onchange = function () {
-			_this.config.options[element.name] = element.checked;
-			_this.config.values[element.name] = element.value;
-			_this.update(_this);
-		};
-	};
-
-	this.onFormSubmit = function (element) {
-		var _this = this;
-		// set an event handler
-		element.onsubmit = function () {
-			_this.update();
-			// cancel the submit
-			return false;
-		};
-	};
-
-	this.init(config);
+	cfg.element.addEventListener('submit', this.convert.bind(this, false));
+	cfg.htmlInput.addEventListener('change', this.convert.bind(this, true));
+	cfg.scssFormat.addEventListener('change', this.convert.bind(this, true));
+	cfg.reverseClassNames.addEventListener('change', this.convert.bind(this, true));
+	cfg.resetIds.addEventListener('change', this.convert.bind(this, true));
+	cfg.resetIds.addEventListener('change', this.convert.bind(this, true));
+	cfg.ignoreIds.addEventListener('change', this.convert.bind(this, true));
+	cfg.indentation.addEventListener('change', this.convert.bind(this, true));
+	cfg.ignoreClasses.addEventListener('change', this.convert.bind(this, true));
+	this.convert(true);
 
 };
 
 // return as a require.js module
 if (typeof module !== 'undefined') {
-	exports = module.exports = Htmltocss;
+	exports = module.exports = HtmltoCss;
 }
