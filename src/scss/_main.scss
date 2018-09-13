@@ -1,27 +1,33 @@
 .html2scss {
+	label {
+		textarea {
+			display: block;
+			height: 15em;
+			margin: 5px 0;
+			width: 100%;
+		}
+	}
+
 	fieldset {
 		border: none;
-		margin : 0;
-		padding : 0;
+		margin: 2rem 0;
+		padding: 0;
+
 		label {
-			textarea {
-				display : block;
-				height : 15em;
-				margin : 5px 0 5px 0;
-				width : 100%;
+			display: block;
+
+			input[type=text] {
+				display: block;
+				width: 100%;
 			}
 		}
-		fieldset {
-			margin-bottom : 5px;
-			label {
-				display : block;
-			}
-		}
-		footer {
-			text-align : right;
-			button {
-				margin : 5px 0 5px 0;
-			}
+	}
+
+	footer {
+		text-align: right;
+
+		button {
+			margin: 5px 0;
 		}
 	}
 }
