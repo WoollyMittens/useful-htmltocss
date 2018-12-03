@@ -50,11 +50,18 @@ var HtmltoCss = function (cfg) {
 			var classNames = (element.getAttribute('class')) ? element.getAttribute('class').trim().replace(/  /g, ' ').split(' ') : [];
 			var classes = [];
 			var ignore = this.ignore;
-			classNames.map(function(name) {
-				if (!ignore.test(name)) classes.push(name);
+			var _container = this.container;
+			classNames.map(function(name, index) {
+				if (!ignore.test(name)) classes.push({
+					'name': name,
+					'index': index,
+					'count' : _container.querySelectorAll('.' + name).length
+				});
 			});
 			// add the input [type] if possible
 			if (element.getAttribute('type')) key += '[type=' + element.getAttribute('type') + ']';
+			// sort the classes by commonality
+			classes = this.sortByCommonality(classes);
 			// reverse the order of class name keys
 			if (cfg.reverseClassNames.checked) classes = classes.reverse();
 			// if the element has an ID
@@ -66,7 +73,7 @@ var HtmltoCss = function (cfg) {
 				// else if the element has a class name
 			} else if (classes.length > 0) {
 				// use the first class as the key
-				key = '.' + classes[0];
+				key = '.' + classes[0].name;
 				// remove the first class
 				classes = classes.reverse();
 				classes.length = classes.length - 1;
@@ -75,8 +82,8 @@ var HtmltoCss = function (cfg) {
 			// add a new node if needed
 			node[key] = node[key] || {};
 			// for any (remaining) class names
-			classes.map(function(className) {
-				node[key]['&.' + className] = {};
+			classes.map(function(_class) {
+				node[key]['&.' + _class.name] = {};
 			});
 			// add a :hover to links
 			if (/^a$/i.test(element.nodeName)) node[key]['&:hover'] = {};
@@ -85,6 +92,15 @@ var HtmltoCss = function (cfg) {
 				this.import(element.childNodes[a], node[key]);
 			}
 		}
+	};
+
+	this.sortByCommonality = function(classes) {
+		classes.sort(function (a, b) {
+			var aValue = a.count * 1000 - a.index;
+			var bValue = b.count * 1000 - b.index;
+			return (aValue < bValue) ? 1 : -1;
+		});
+		return classes;
 	};
 
 	this.exportScss = function(key, node, indent, scss) {
