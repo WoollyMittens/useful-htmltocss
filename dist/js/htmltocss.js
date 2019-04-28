@@ -161,6 +161,5 @@ var HtmltoCss = function (cfg) {
 };
 
 // return as a require.js module
-if (typeof module !== 'undefined') {
-	exports = module.exports = HtmltoCss;
-}
+if (typeof define != 'undefined') define([], function () { return HtmltoCss });
+if (typeof module != 'undefined') module.exports = HtmltoCss;
