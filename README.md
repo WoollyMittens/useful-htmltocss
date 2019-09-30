@@ -43,6 +43,8 @@ var htmltocss = new HtmltoCss({
 	'scssOutput': document.querySelector('[name=scss_output]'),
 	'scssFormat': document.querySelector('[name=scss_format]'),
 	'reverseClassNames': document.querySelector('[name=reverse_class_names]'),
+	'splitClassNames': document.querySelector('[name=split_class_names]'),
+	'undeepClassNames': document.querySelector('[name=undeep_class_names]'),
 	'resetIds': document.querySelector('[name=reset_ids]'),
 	'ignoreIds': document.querySelector('[name=ignore_ids]'),
 	'convertHtml': document.querySelector('[name=convert_html]'),
@@ -53,7 +55,7 @@ var htmltocss = new HtmltoCss({
 
 **element : {DOM Element}** - The form element of the converter.
 
-**... : {DOM Element}** - The individual form fields.
+**... : {DOM Element}** - The individual formatting options.
 
 ## How to build the script
 
