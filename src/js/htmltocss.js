@@ -95,10 +95,13 @@ var HtmltoCss = function(cfg) {
       // add a :hover to links
       if (/^a$/i.test(element.nodeName)) parent[key]['&:hover'] = {};
 			// assign the class name flags
-			flags.forEach(this.assignFlags.bind(this, root, parent[key]));
+      var parentFlag;
+			flags.forEach(function(flag){
+        parentFlag = _this.assignFlags(root, parent[key], flag);
+      });
       // recurse all child nodes
 			element.childNodes.forEach(function(childNode) {
-				_this.import(childNode, parent[key], root);
+				_this.import(childNode, parentFlag || parent[key], root);
 			});
     }
   };
@@ -124,6 +127,8 @@ var HtmltoCss = function(cfg) {
 			// adopt the new parent
 			parent = parent[segment];
 		});
+    // return the deepest node
+    return parent;
 	};
 
   this.exportScss = function(key, node, indent, scss) {
