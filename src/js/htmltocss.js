@@ -95,7 +95,7 @@ var HtmltoCss = function(cfg) {
       // add a :hover to links
       if (/^a$/i.test(element.nodeName)) parent[key]['&:hover'] = {};
 			// assign the class name flags
-			flags.forEach(this.assignFlags.bind(this, root, parent));
+			flags.forEach(this.assignFlags.bind(this, root, parent[key]));
       // recurse all child nodes
 			element.childNodes.forEach(function(childNode) {
 				_this.import(childNode, parent[key], root);
@@ -114,10 +114,10 @@ var HtmltoCss = function(cfg) {
 
 	this.assignFlags = function(root, parent, flags) {
 		// split the flag into its segments
-		var prefix = (root === parent) ? '&.' : '.';
-		var segments = (prefix + flags.name).replace(/-/g, '#&-').replace(/_/g, '#&_').replace(/#-#-/g, '#&--').replace(/#_#_/g, '#&__').split(/#/);
+		var segments = ('.' + flags.name).replace(/-/g, '#&-').replace(/_/g, '#&_').replace(/#-#-/g, '#&--').replace(/#_#_/g, '#&__').split(/#/);
 		// for each segment level
-		var parent = root;
+    console.log('this.map', this.map);
+		parent = (parent === root) ? this.map.body : root;
 		segments.forEach(function(segment) {
 			// assign the flag to the structure
 			parent[segment] = parent[segment] || parent[segment] || {};
@@ -141,9 +141,11 @@ var HtmltoCss = function(cfg) {
       tabs = '';
     }
     // recurse every key in this node
-    for (var child in node) {
-      scss += this.exportScss(child, node[child], indent + 1, '');
-    }
+    var _this = this;
+    var sortedKeys = (cfg.sortClassNames.checked) ? Object.keys(node).sort() : Object.keys(node);
+    sortedKeys.forEach(function(child) {
+      scss += _this.exportScss(child, node[child], indent + 1, '');
+    });
     // close the node
     scss += (key) ? tabs + '}\n' : '';
     // return the result
@@ -179,6 +181,7 @@ var HtmltoCss = function(cfg) {
   cfg.scssFormat.addEventListener('change', this.convert.bind(this, true));
   cfg.reverseClassNames.addEventListener('change', this.convert.bind(this, true));
   cfg.splitClassNames.addEventListener('change', this.convert.bind(this, true));
+  cfg.sortClassNames.addEventListener('change', this.convert.bind(this, true));
   cfg.undeepClassNames.addEventListener('change', this.convert.bind(this, true));
   cfg.resetIds.addEventListener('change', this.convert.bind(this, true));
   cfg.resetIds.addEventListener('change', this.convert.bind(this, true));
