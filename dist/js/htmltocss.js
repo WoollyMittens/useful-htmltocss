@@ -50,11 +50,13 @@ var HtmltoCss = function(cfg) {
       var classNames = (element.getAttribute('class')) ? element.getAttribute('class').trim().replace(/  /g, ' ').split(' ') : [];
       var classes = [];
       var flags = [];
+      var preservedRoot = (cfg.preservedRoot.checked && element.parentNode && element.parentNode.nodeName === 'BODY');
       var variant;
+      // split up the class names
 			var _this = this;
       classNames.map(function(name, index) {
-        if (!_this.ignore.test(name)) {
-					variant = (/-|_/.test(name) && cfg.splitClassNames.checked) ? flags : classes;
+        if (name !== '' && !_this.ignore.test(name)) {
+					variant = (/-|_/.test(name) && cfg.splitClassNames.checked && !preservedRoot) ? flags : classes;
           variant.push({
             'name': name,
             'index': index,
@@ -119,7 +121,6 @@ var HtmltoCss = function(cfg) {
 		// split the flag into its segments
 		var segments = ('.' + flags.name).replace(/-/g, '#&-').replace(/_/g, '#&_').replace(/#-#-/g, '#&--').replace(/#_#_/g, '#&__').split(/#/);
 		// for each segment level
-    console.log('this.map', this.map);
 		parent = (parent === root) ? this.map.body : root;
 		segments.forEach(function(segment) {
 			// assign the flag to the structure
@@ -188,6 +189,7 @@ var HtmltoCss = function(cfg) {
   cfg.splitClassNames.addEventListener('change', this.convert.bind(this, true));
   cfg.sortClassNames.addEventListener('change', this.convert.bind(this, true));
   cfg.undeepClassNames.addEventListener('change', this.convert.bind(this, true));
+  cfg.preservedRoot.addEventListener('change', this.convert.bind(this, true));
   cfg.resetIds.addEventListener('change', this.convert.bind(this, true));
   cfg.resetIds.addEventListener('change', this.convert.bind(this, true));
   cfg.ignoreIds.addEventListener('change', this.convert.bind(this, true));

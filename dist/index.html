@@ -66,6 +66,7 @@
 			      <label><input type="checkbox" name="split_class_names" checked/> Split class names</label>
 			      <label><input type="checkbox" name="sort_class_names"/> Sort class names</label>
 			      <label><input type="checkbox" name="undeep_class_names"/> Reduce depth</label>
+			      <label><input type="checkbox" name="preserved_root" checked/> Preserve container class name</label>
 			      <label><input type="checkbox" name="reset_ids" checked/> Reset at ID's</label>
 			      <label><input type="checkbox" name="ignore_ids"/> Ignore ID's</label>
 						<br/>
@@ -92,6 +93,7 @@
 			      'splitClassNames': document.querySelector('[name=split_class_names]'),
 			      'sortClassNames': document.querySelector('[name=sort_class_names]'),
 			      'undeepClassNames': document.querySelector('[name=undeep_class_names]'),
+						'preservedRoot': document.querySelector('[name=preserved_root]'),
 			      'resetIds': document.querySelector('[name=reset_ids]'),
 			      'ignoreIds': document.querySelector('[name=ignore_ids]'),
 			      'convertHtml': document.querySelector('[name=convert_html]'),
