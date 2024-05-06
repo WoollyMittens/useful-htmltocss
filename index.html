@@ -1,10 +1,110 @@
 <!DOCTYPE html>
 <html>
 	<head>
-    <title>Redirect to demo</title>
-		<script>document.location.replace('./dist/');</script>
+		<meta charset="UTF-8" />
+		<title>htmltocss.js: HTML to CSS Converter</title>
+		<style>
+			html { font-family:Sans-Serif; font-size:75%; height:100%; }
+			body { _height:100%; line-height:180%; margin:0; min-height:100%; padding:1%; }
+			.example { max-width:960px; margin:0 auto; padding:0; clear:both; }
+			.example > article, .example > aside { width:98%; padding:2%; }
+			.example-left > article, .example-left > aside { width:48%; padding:1%; float:left; }
+			.example-right > article, .example-right > aside { width:48%; padding:1%; float:right; }
+		</style>
 	</head>
 	<body>
-		<a href="./dist/">Start</a>
+		<section class="example example-right">
+			<article>
+				<h2>HTML to CSS Converter</h2>
+				<p>This converter parses the structure of any given piece of HTML and generates a rough empty stylesheet from it.</p>
+				<p><a class="button downloadButton" href="http://github.com/WoollyMittens/useful-htmltocss" target="_blank">Download (GitHub)</a></p>
+			</article>
+			<aside>
+
+				<!-- Cut below this -->
+				<style>@import url("./css/htmltocss.css");</style>
+				<form class="html2scss" id="html2scss_form">
+					<label>
+						<b>Insert HTML in here:</b>
+						<textarea name="html_input">
+&lt;section id="example"&gt;
+	&lt;header&gt;
+		&lt;h1&gt;Lorem Ipsum&lt;/h1&gt;
+		&lt;input type="text" name="keyword"/&gt;
+	&lt;/header&gt;
+	&lt;article&gt;
+		&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+	&lt;/article&gt;
+	&lt;aside class="banner banner-left"&gt;
+		&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+		&lt;p&gt;<a href="#" class="cta">Dolor</a>&lt;/p&gt;
+	&lt;/aside&gt;
+	&lt;aside class="banner banner-right"&gt;
+		&lt;p&gt;Lorem ipsum dolor sit amet.&lt;/p&gt;
+		&lt;p&gt;<a href="#" class="cta">Dolor</a>&lt;/p&gt;
+	&lt;/aside&gt;
+	&lt;div class="row"&gt;
+		&lt;div class="col-sm-4 col-md-3 col-offset-sm-1 left">left&lt;/div&gt;
+		&lt;div class="col-sm-8 col-md-9 right">right&lt;/div&gt;
+	&lt;/div&gt;
+	&lt;footer&gt;
+		&lt;menu id="sitemap" class="map map-open"&gt;
+			&lt;li class="map-item"&gt;&lt;a class="map-lorem map-item-link" href="./useful-htmltocss/dist/"&gt;Lorem&lt;/a&gt;&lt;/li&gt;
+			&lt;li class="map-item"&gt;&lt;a class="map-ipsum map-item-link active" href="./useful-htmltocss/dist/"&gt;Ipsum&lt;/a&gt;&lt;/li&gt;
+			&lt;li class="map-item"&gt;&lt;a class="map-dolor map-item-link" href="./useful-htmltocss/dist/"&gt;Dolor&lt;/a&gt;&lt;/li&gt;
+			&lt;li class="map-item"&gt;&lt;a class="map-sit map-item-link" href="./useful-htmltocss/dist/"&gt;Sit&lt;/a&gt;&lt;/li&gt;
+			&lt;li class="map-item"&gt;&lt;a class="map-amet map-item-link" href="./useful-htmltocss/dist/"&gt;Amet&lt;/a&gt;&lt;/li&gt;
+		&lt;/menu&gt;
+	&lt;/footer&gt;
+&lt;/section&gt;
+						</textarea>
+					</label>
+					<fieldset>
+						<legend>Set your preferences here:</legend>
+						<label><input type="checkbox" name="scss_format" checked/> Format as SASS/LESS</label>
+			      <label><input type="checkbox" name="reverse_class_names"/> Reverse class names</label>
+			      <label><input type="checkbox" name="split_class_names" checked/> Split class names</label>
+			      <label><input type="checkbox" name="sort_class_names"/> Sort class names</label>
+			      <label><input type="checkbox" name="undeep_class_names"/> Reduce depth</label>
+			      <label><input type="checkbox" name="preserved_root" checked/> Preserve container class name</label>
+			      <label><input type="checkbox" name="reset_ids" checked/> Reset at ID's</label>
+			      <label><input type="checkbox" name="ignore_ids"/> Ignore ID's</label>
+						<br/>
+			      <label>Indentation <input type="text" name="indentation" value="\t" placeholder="\t for tabs"/></label>
+			      <label>Ignore <input type="text" name="ignore_classes" value="^span-|^col-|^row$|^container$|^pull-|^first$|^last$" placeholder="regular expression"/></label>
+					</fieldset>
+					<label>
+						<b>Copy CSS from here:</b>
+						<textarea name="scss_output"></textarea>
+					</label>
+					<footer>
+						<button class="convert_html" type="submit">Convert</button>
+					</footer>
+				</form>
+				<script src="./js/htmltocss.js"></script>
+				<script>
+				//<!--
+					var htmltocss = new HtmltoCss({
+						'element': document.getElementById('html2scss_form'),
+			      'htmlInput': document.querySelector('[name=html_input]'),
+			      'scssOutput': document.querySelector('[name=scss_output]'),
+			      'scssFormat': document.querySelector('[name=scss_format]'),
+			      'reverseClassNames': document.querySelector('[name=reverse_class_names]'),
+			      'splitClassNames': document.querySelector('[name=split_class_names]'),
+			      'sortClassNames': document.querySelector('[name=sort_class_names]'),
+			      'undeepClassNames': document.querySelector('[name=undeep_class_names]'),
+						'preservedRoot': document.querySelector('[name=preserved_root]'),
+			      'resetIds': document.querySelector('[name=reset_ids]'),
+			      'ignoreIds': document.querySelector('[name=ignore_ids]'),
+			      'convertHtml': document.querySelector('[name=convert_html]'),
+			      'indentation': document.querySelector('[name=indentation]'),
+			      'ignoreClasses': document.querySelector('[name=ignore_classes]')
+					});
+				//-->
+				</script>
+				<!-- Cut above this -->
+
+			</aside>
+		</section>
 	</body>
 </html>
